@@ -3,6 +3,7 @@ package org.example;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class day2 {
@@ -27,15 +28,15 @@ public class day2 {
 
         for (String report : reports) {
 
-            String[] levels = report.split(" ");
+            ArrayList<String> levels = new ArrayList<>(Arrays.asList(report.split(" ")));
 
             boolean isSafe = false;
             int firstDirection = 0;
 
-            for (int i = 0; i < levels.length - 1; i++) {
+            for (int i = 0; i < levels.size() - 1; i++) {
 
-                Integer actualLevel = Integer.parseInt(levels[i]);
-                Integer nextLevel = Integer.parseInt(levels[i + 1]);
+                Integer actualLevel = Integer.parseInt(levels.get(i));
+                Integer nextLevel = Integer.parseInt(levels.get(i + 1));
 
                 int difference = actualLevel - nextLevel;
                 int absDifference = Math.abs(difference);
