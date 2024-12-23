@@ -24,65 +24,81 @@ public class day2 {
 
     private static int getSafeReports(ArrayList<String> reports) {
 
-        int safes = 0;
+        int safeReports = 0;
 
         for (String report : reports) {
 
             ArrayList<String> levels = new ArrayList<>(Arrays.asList(report.split(" ")));
 
-            boolean isSafe = false;
-            int firstDirection = 0;
+            boolean isSafe = loopLevels(levels);
 
-            for (int i = 0; i < levels.size() - 1; i++) {
-
-                Integer actualLevel = Integer.parseInt(levels.get(i));
-                Integer nextLevel = Integer.parseInt(levels.get(i + 1));
-
-                int difference = actualLevel - nextLevel;
-                int absDifference = Math.abs(difference);
-                int actualDirection;
-
-                if (isNotTolerance(absDifference)) {
-                    isSafe = false;
-                    break;
-                }
-
-                if (i == 0) {
-                    if (difference > 0) {
-                        firstDirection = 1;
-                    } else if (difference < 0) {
-                        firstDirection = -1;
-                    } else {
-                        break;
-                    }
-                    continue;
-                }
-
-                if (difference > 0) {
-                    actualDirection = 1;
-                } else if (difference < 0) {
-                    actualDirection = -1;
-                } else {
-                    isSafe = false;
-                    break;
-                }
-
-                if (isIncrease(firstDirection, actualDirection) || isDecrease(firstDirection, actualDirection)) {
-                    isSafe = true;
-                } else {
-                    isSafe = false;
-                    break;
-                }
-            }
             if (isSafe) {
-                safes++;
+                safeReports++;
             }
         }
 
-        return safes;
+        return safeReports;
     }
 
-    private static boolean isNotTolerance(Integer absDifference) {
+    private static boolean loopLevels(ArrayList<String> levels) {
+
+        int firstDirection = 0;
+        int actualDirection;
+        boolean isSafe = false;
+
+        for (int i = 0; i < levels.size() - 1; i++) {
+
+            int actualLevel = Integer.parseInt(levels.get(i));
+            int nextLevel = Integer.parseInt(levels.get(i + 1));
+
+            if (isNotTolerance(actualLevel, nextLevel)) {
+                isSafe = false;
+                break;
+            }
+
+            if (i == 0) {
+                if (isDifferencePositive(actualLevel, nextLevel)) {
+                    firstDirection = 1;
+                } else if (isDifferenceNegative(actualLevel, nextLevel)) {
+                    firstDirection = -1;
+                } else {
+                    break;
+                }
+            }
+
+            if (isDifferencePositive(actualLevel, nextLevel)) {
+                actualDirection = 1;
+            } else if (isDifferenceNegative(actualLevel, nextLevel)) {
+                actualDirection = -1;
+            } else {
+                isSafe = false;
+                break;
+            }
+
+            if (isIncreaseOrDecrease(firstDirection, actualDirection)) {
+                isSafe = true;
+            } else {
+                isSafe = false;
+                break;
+            }
+        }
+        return isSafe;
+    }
+
+    private static boolean isIncreaseOrDecrease(int firstDirection, int actualDirection) {
+        return isIncrease(firstDirection, actualDirection) || isDecrease(firstDirection, actualDirection);
+    }
+
+    private static boolean isDifferencePositive(int levelA, int levelB) {
+        return levelA - levelB > 0;
+    }
+
+    private static boolean isDifferenceNegative(int levelA, int levelB) {
+        return levelA - levelB < 0;
+    }
+
+    private static boolean isNotTolerance(int levelA, int levelB) {
+        int absDifference = Math.abs(levelA - levelB);
         return !(absDifference >= 1 && absDifference <= 3);
     }
 
