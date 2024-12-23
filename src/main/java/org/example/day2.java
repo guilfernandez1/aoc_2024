@@ -21,7 +21,7 @@ public class day2 {
         System.out.println(getSafeReports(reports));
 
     }
-
+    //Part 1 and Part 2
     private static int getSafeReports(ArrayList<String> reports) {
 
         int safeReports = 0;
@@ -34,6 +34,19 @@ public class day2 {
 
             if (isSafe) {
                 safeReports++;
+            } else {
+                for (int i = 0; i < levels.size(); i++) {
+
+                    ArrayList<String> unsafeLevels = new ArrayList<>(levels);
+
+                    unsafeLevels.remove(i);
+                    isSafe = loopLevels(unsafeLevels);
+
+                    if (isSafe) {
+                        safeReports++;
+                        break;
+                    }
+                }
             }
         }
 
