@@ -21,12 +21,13 @@ public class day3 {
             corruptedMemory.append(scanner.nextLine());
         }
 
-        System.out.println(getSumCorruptedMemory(corruptedMemory));
+        System.out.println(getSumCorruptedMemoryFirstRegex(corruptedMemory));
+        System.out.println(getSumCorruptedMemorySecondRegex(corruptedMemory));
 
     }
 
     //Part 1
-    private static int getSumCorruptedMemory(StringBuilder corruptedMemory) {
+    private static int getSumCorruptedMemoryFirstRegex(StringBuilder corruptedMemory) {
 
         Pattern pattern = Pattern.compile("mul\\((\\d{1,3},\\d{1,3})\\)");
         Matcher matcher = pattern.matcher(corruptedMemory);
@@ -39,6 +40,37 @@ public class day3 {
             ArrayList<String> numbers = new ArrayList<>(Arrays.asList(matchResult.group(1).split(",")));
             int mul = Integer.parseInt(numbers.get(0)) * Integer.parseInt(numbers.get(1));
             sum += mul;
+        }
+        return sum;
+    }
+
+    //Part 2
+    private static int getSumCorruptedMemorySecondRegex(StringBuilder corruptedMemory) {
+
+        Pattern pattern = Pattern.compile("don't\\(\\)|do\\(\\)|mul\\((\\d{1,3},\\d{1,3})\\)");
+        Matcher matcher = pattern.matcher(corruptedMemory);
+
+        List<MatchResult> results = matcher.results().toList();
+
+        int sum = 0;
+        String REGEX_DO_NOT = "don't()";
+        String REGEX_DO = "do()";
+        boolean isMul = true;
+
+        for (MatchResult result : results) {
+
+            if (REGEX_DO.equalsIgnoreCase(result.group())) {
+                isMul = true;
+                continue;
+            } else if (REGEX_DO_NOT.equalsIgnoreCase(result.group())) {
+                isMul = false;
+            }
+
+            if (isMul) {
+                ArrayList<String> numbers = new ArrayList<>(Arrays.asList(result.group(1).split(",")));
+                int mul = Integer.parseInt(numbers.get(0)) * Integer.parseInt(numbers.get(1));
+                sum += mul;
+            }
         }
         return sum;
     }
